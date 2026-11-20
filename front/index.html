@@ -302,4 +302,347 @@
       background: var(--surface);
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 20px 40px -15px rgba(15, 23
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+      border: 1px solid var(--border);
+    }
+
+    .topbar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 1.1rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .user-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .role-badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      width: auto;
+    }
+
+    .btn-logout:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .dash-body {
+      padding: 1.75rem;
+    }
+
+    .dash-notice {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      color: #334155;
+      margin-bottom: 1.4rem;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .mod-card {
+      padding: 0.95rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .mod-card.allowed {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+    }
+
+    .mod-card.denied {
+      background: #f8fafc;
+      opacity: 0.62;
+    }
+
+    .mod-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .mod-card.denied .mod-title {
+      color: var(--text-muted);
+    }
+
+    .mod-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .allowed .mod-status { color: var(--success-text); }
+    .denied .mod-status { color: #94a3b8; }
+
+    @media (max-width: 760px) {
+      .login-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .brand-panel {
+        padding: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= VISTA 1: LOGIN PROFESIONAL (SU-36) ================= -->
+  <div class="login-wrapper" id="vista-login">
+    <div class="brand-panel">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 6v12M6 12h12"/><rect x="3" y="3" width="18" height="18" rx="4"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Sanatorio UNDAV</h2>
+          <span>Gestión Clínica & Guardia</span>
+        </div>
+      </div>
+
+      <div class="brand-copy">
+        <h1>Acceso al Entorno Operativo</h1>
+        <p>Plataforma centralizada para admisión, clasificación de triage, atención médica y monitoreo en tiempo real.</p>
+      </div>
+
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span>Sistema operativo · Contingencia offline activa</span>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="form-header">
+        <h3>Iniciar sesión</h3>
+        <p>Ingresá tus credenciales institucionales para continuar</p>
+      </div>
+
+      <div class="error-banner" id="mensaje-error">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="texto-error">Credenciales inválidas.</span>
+      </div>
+
+      <form id="form-login">
+        <div class="form-group">
+          <label for="email">Correo institucional</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input type="email" id="email" placeholder="nombre@undav.edu.ar" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password" placeholder="Ingresá tu contraseña" required />
+            <button type="button" class="toggle-pass" id="btn-toggle-pass" title="Mostrar/ocultar contraseña">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Ingresar al sistema</button>
+      </form>
+
+      <div class="qa-box">
+        <span class="qa-title">Autocompletar perfil de prueba (clave: 1234)</span>
+        <div class="chips">
+          <button type="button" class="chip" data-email="admision@undav.edu.ar">Admisión</button>
+          <button type="button" class="chip" data-email="triage@undav.edu.ar">Triage</button>
+          <button type="button" class="chip" data-email="medico@undav.edu.ar">Médico</button>
+          <button type="button" class="chip" data-email="jefe@undav.edu.ar">Jefe Guardia</button>
+          <button type="button" class="chip" data-email="admin.consultorios@undav.edu.ar">Administrativo</button>
+          <button type="button" class="chip" data-email="ti@undav.edu.ar">Área TI</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VISTA 2: ENTORNO SEGÚN ROL (SU-4) ================= -->
+  <div class="dashboard-wrapper" id="vista-panel">
+    <div class="topbar">
+      <div class="user-meta">
+        <div class="avatar" id="avatar-iniciales">JP</div>
+        <div>
+          <div style="font-weight: 600; font-size: 1rem;" id="bienvenida"></div>
+          <div style="margin-top: 0.2rem; display: flex; gap: 0.5rem; align-items: center;">
+            <span class="role-badge" id="rol-usuario"></span>
+            <span style="font-size: 0.78rem; color: #94a3b8;" id="matricula-usuario"></span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-logout" id="btn-salir">Cerrar sesión</button>
+    </div>
+
+    <div class="dash-body">
+      <div class="dash-notice">
+        <strong>Control de acceso basado en roles (RBAC):</strong> Se habilitaron únicamente los módulos autorizados para tu perfil operativo. Las funcionalidades de otros roles permanecen bloqueadas.
+      </div>
+
+      <div class="modules-grid" id="lista-modulos"></div>
+    </div>
+  </div>
+
+  <script>
+    const TODOS_LOS_MODULOS = [
+      "Registro de Guardia",
+      "Búsqueda por DNI/Afiliado",
+      "Registro de Parámetros Fisiológicos",
+      "Clasificación Triage",
+      "Atención de Guardia",
+      "Historia Clínica",
+      "Recetas Electrónicas",
+      "Tablero de Control en Tiempo Real",
+      "Autorización de Derivaciones",
+      "Validación de Órdenes Médicas",
+      "Gestión de Agenda",
+      "Alta de Profesionales",
+      "Parametrización Obras Sociales",
+      "Reglas CIE-10"
+    ];
+
+    const BACKUP_USUARIOS = [
+      { nombre: "Laura Gómez", email: "admision@undav.edu.ar", password: "1234", rol: "Admisión", pantallas_permitidas: ["Registro de Guardia", "Búsqueda por DNI/Afiliado"] },
+      { nombre: "Carlos Méndez", email: "triage@undav.edu.ar", password: "1234", rol: "Triage", pantallas_permitidas: ["Registro de Parámetros Fisiológicos", "Clasificación Triage"] },
+      { nombre: "Dra. Sofía Martínez", email: "medico@undav.edu.ar", password: "1234", rol: "Médico", matricula: "MP-45821", pantallas_permitidas: ["Atención de Guardia", "Historia Clínica", "Recetas Electrónicas"] },
+      { nombre: "Dr. Roberto Silva", email: "jefe@undav.edu.ar", password: "1234", rol: "Jefe de Guardia", pantallas_permitidas: ["Tablero de Control en Tiempo Real", "Autorización de Derivaciones"] },
+      { nombre: "Mariana Torres", email: "admin.consultorios@undav.edu.ar", password: "1234", rol: "Administrativo", pantallas_permitidas: ["Validación de Órdenes Médicas", "Gestión de Agenda"] },
+      { nombre: "Juan Pizzorno", email: "ti@undav.edu.ar", password: "1234", rol: "TI", pantallas_permitidas: ["Alta de Profesionales", "Parametrización Obras Sociales", "Reglas CIE-10"] }
+    ];
+
+    // Mostrar / ocultar contraseña
+    document.getElementById('btn-toggle-pass').addEventListener('click', () => {
+      const passInput = document.getElementById('password');
+      passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    });
+
+    // Botones rápidos de prueba para QA
+    document.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('email').value = btn.dataset.email;
+        document.getElementById('password').value = '1234';
+        document.getElementById('mensaje-error').style.display = 'none';
+      });
+    });
+
+    async function obtenerUsuarios() {
+      try {
+        const resp = await fetch('../back/usuarios.json');
+        if (!resp.ok) throw new Error('Error cargando JSON');
+        return await resp.json();
+      } catch (e) {
+        return BACKUP_USUARIOS;
+      }
+    }
+
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const errorBox = document.getElementById('mensaje-error');
+
+      const usuarios = await obtenerUsuarios();
+      const usuarioValido = usuarios.find(u => u.email.toLowerCase() === email && u.password === password);
+
+      if (!usuarioValido) {
+        document.getElementById('texto-error').textContent = 'Credenciales inválidas. Verificá tu correo institucional y contraseña.';
+        errorBox.style.display = 'flex';
+        return;
+      }
+
+      errorBox.style.display = 'none';
+      mostrarPanelRol(usuarioValido);
+    });
+
+    function mostrarPanelRol(usuario) {
+      document.getElementById('vista-login').style.display = 'none';
+      document.getElementById('vista-panel').style.display = 'block';
+
+      const iniciales = usuario.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('avatar-iniciales').textContent = iniciales;
+      document.getElementById('bienvenida').textContent = usuario.nombre;
+      document.getElementById('rol-usuario').textContent = `Perfil: ${usuario.rol}`;
+      document.getElementById('matricula-usuario').textContent = usuario.matricula ? `Matrícula: ${usuario.matricula}` : '';
+
+      const grid = document.getElementById('lista-modulos');
+      grid.innerHTML = '';
+
+      TODOS_LOS_MODULOS.forEach(modulo => {
+        const permitido = usuario.pantallas_permitidas.includes(modulo);
+        const card = document.createElement('div');
+        card.className = `mod-card ${permitido ? 'allowed' : 'denied'}`;
+        card.innerHTML = `
+          <div class="mod-title">${modulo}</div>
+          <div class="mod-status">
+            ${permitido ? '✓ Acceso habilitado' : '✕ Restringido por rol'}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('btn-salir').addEventListener('click', () => {
+      document.getElementById('form-login').reset();
+      document.getElementById('password').type = 'password';
+      document.getElementById('vista-panel').style.display = 'none';
+      document.getElementById('vista-login').style.display = 'grid';
+    });
+  </script>
+</body>
+</html>
