@@ -2,7 +2,7 @@
 # buscarPaciente, esPacientePediatrico e ingresarPaciente me parece que pueden ir en un módulo
 # común porque ¿no son bastante usadas? Si es así habría que separar el
 # import en los archivos que haga falta
-from FuncionesSU-45 import (buscarPaciente, esPacientePediatrico,
+from FuncionesSU_45 import (buscarPaciente, esPacientePediatrico,
 EDAD_MAXIMA_PEDIATRIA, ingresarPaciente, derivarPacienteATriage)
 
 def test_admision():
