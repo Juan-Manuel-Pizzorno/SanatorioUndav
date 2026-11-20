@@ -1,4 +1,5 @@
 // [SU-43] Testing: Pruebas positivas y negativas de acceso por matrícula y selector de contexto médico
+// [SU-43] Testing: Pruebas positivas y negativas de acceso por matrícula y selector de contexto médico
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -31,13 +32,10 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     sessionStorage.clear();
   });
 
-  // =========================================================================
-  // BLOQUE A: PRUEBAS POSITIVAS (FLUJOS VÁLIDOS DE MATRÍCULA Y CONTEXTO)
-  // =========================================================================
   describe('A. Pruebas Positivas (Acceso y Adaptación por Ámbito)', () => {
 
     it('CP-12: Médico con doble ámbito ingresa con usuario único vinculado a su matrícula y solicita selección', async () => {
-      const res = await iniciarSesion('medico@undav.edu.ar', '1234');
+      const res = await iniciarSesion('sofia.martinez@undav.edu.ar', '1234');
       assert.equal(res.ok, true);
       assert.equal(res.usuario.matricula, 'MP-45821');
       assert.equal(res.requiereSeleccionContexto, true);
@@ -45,7 +43,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-13: Selección de contexto "Guardia" habilita herramientas de urgencia y bloquea agenda externa', async () => {
-      await iniciarSesion('medico@undav.edu.ar', '1234');
+      await iniciarSesion('sofia.martinez@undav.edu.ar', '1234');
       const res = seleccionarContextoMedico('Guardia');
 
       assert.equal(res.ok, true);
@@ -57,7 +55,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-14: Selección de contexto "Consultorios Externos" adapta la interfaz a agenda y estudios', async () => {
-      await iniciarSesion('medico@undav.edu.ar', '1234');
+      await iniciarSesion('sofia.martinez@undav.edu.ar', '1234');
       const res = seleccionarContextoMedico('Consultorios Externos');
 
       assert.equal(res.ok, true);
@@ -69,7 +67,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-15: Cambio dinámico de ámbito en sesión activa actualiza permisos al instante', async () => {
-      await iniciarSesion('medico@undav.edu.ar', '1234');
+      await iniciarSesion('sofia.martinez@undav.edu.ar', '1234');
       seleccionarContextoMedico('Guardia');
       assert.equal(tieneAccesoModulo(obtenerSesionActiva(), 'Atención de Guardia'), true);
 
@@ -80,7 +78,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-16: Médico habilitado en un único ámbito ingresa directo sin selector intermedio', async () => {
-      const res = await iniciarSesion('consultorios.medico@undav.edu.ar', '1234');
+      const res = await iniciarSesion('lucas.pereyra@undav.edu.ar', '1234');
       assert.equal(res.ok, true);
       assert.equal(res.usuario.matricula, 'MP-51204');
       assert.equal(res.requiereSeleccionContexto, false);
@@ -89,13 +87,10 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
   });
 
-  // =========================================================================
-  // BLOQUE B: PRUEBAS NEGATIVAS (RESTRICCIONES Y VALIDACIÓN DE MATRÍCULA)
-  // =========================================================================
   describe('B. Pruebas Negativas (Bloqueos de Matrícula y Ámbitos No Autorizados)', () => {
 
     it('CP-17: Rechaza médico de ámbito único intentando cambiar a un contexto no habilitado', async () => {
-      await iniciarSesion('consultorios.medico@undav.edu.ar', '1234');
+      await iniciarSesion('lucas.pereyra@undav.edu.ar', '1234');
       const res = seleccionarContextoMedico('Guardia');
 
       assert.equal(res.ok, false);
@@ -103,7 +98,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-18: Rechaza selección de un ámbito operativo inexistente', async () => {
-      await iniciarSesion('medico@undav.edu.ar', '1234');
+      await iniciarSesion('sofia.martinez@undav.edu.ar', '1234');
       const res = seleccionarContextoMedico('Quirófano Central');
 
       assert.equal(res.ok, false);
@@ -111,7 +106,7 @@ describe('Suite de Testing — Selector de Contexto Médico y Matrícula (SU-43)
     });
 
     it('CP-19: Rechaza cambio de contexto si el usuario autenticado no tiene rol Médico', async () => {
-      await iniciarSesion('admision@undav.edu.ar', '1234');
+      await iniciarSesion('laura.gomez@undav.edu.ar', '1234');
       const res = seleccionarContextoMedico('Guardia');
 
       assert.equal(res.ok, false);

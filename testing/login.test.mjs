@@ -4,7 +4,6 @@ import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-// 1. Simulamos el entorno del navegador (fetch local + sessionStorage) para probar back/auth.js real
 const usuariosJSON = JSON.parse(fs.readFileSync('./back/usuarios.json', 'utf-8'));
 
 globalThis.fetch = async () => ({
@@ -20,7 +19,6 @@ globalThis.sessionStorage = {
   clear: () => storage.clear()
 };
 
-// Importamos las funciones productivas de SU-38
 const {
   TODOS_LOS_MODULOS,
   iniciarSesion,
@@ -35,12 +33,9 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
     sessionStorage.clear();
   });
 
-  // =========================================================================
-  // BLOQUE A: PRUEBAS POSITIVAS (CASOS QUE DEBEN PASAR / ACCESO CONCEDIDO)
-  // =========================================================================
   describe('A. Pruebas Positivas (Flujos Válidos)', () => {
 
- it('CP-01: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
+    it('CP-01: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
       const rolesEsperados = ['Admisión', 'Triage', 'Médico', 'Jefe de Guardia', 'Administrativo', 'TI'];
       const rolesUnicosEnJSON = [...new Set(usuariosJSON.map((u) => u.rol))];
       assert.deepEqual(rolesUnicosEnJSON, rolesEsperados);
@@ -56,14 +51,14 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
     });
 
     it('CP-03: Normalización de correo (mayúsculas y espacios laterales) permite ingresar', async () => {
-      const res = await iniciarSesion('   MEDICO@UNDAV.EDU.AR  ', '1234');
+      const res = await iniciarSesion('   SOFIA.MARTINEZ@UNDAV.EDU.AR  ', '1234');
       assert.equal(res.ok, true);
       assert.equal(res.usuario.nombre, 'Dra. Sofía Martínez');
       assert.equal(res.usuario.matricula, 'MP-45821');
     });
 
     it('CP-04: Persistencia y cierre de sesión limpian correctamente el estado', async () => {
-      await iniciarSesion('admision@undav.edu.ar', '1234');
+      await iniciarSesion('laura.gomez@undav.edu.ar', '1234');
       assert.notEqual(obtenerSesionActiva(), null, 'La sesión debe quedar guardada tras login');
 
       cerrarSesion();
@@ -71,23 +66,20 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
     });
 
     it('CP-05: Cada rol tiene acceso positivo a sus pantallas asignadas', async () => {
-      const { usuario: triage } = await iniciarSesion('triage@undav.edu.ar', '1234');
+      const { usuario: triage } = await iniciarSesion('carlos.mendez@undav.edu.ar', '1234');
       assert.equal(tieneAccesoModulo(triage, 'Registro de Parámetros Fisiológicos'), true);
       assert.equal(tieneAccesoModulo(triage, 'Clasificación Triage'), true);
 
-      const { usuario: jefe } = await iniciarSesion('jefe@undav.edu.ar', '1234');
+      const { usuario: jefe } = await iniciarSesion('roberto.silva@undav.edu.ar', '1234');
       assert.equal(tieneAccesoModulo(jefe, 'Tablero de Control en Tiempo Real'), true);
       assert.equal(tieneAccesoModulo(jefe, 'Autorización de Derivaciones'), true);
     });
   });
 
-  // =========================================================================
-  // BLOQUE B: PRUEBAS NEGATIVAS (CASOS RECHAZADOS / RESTRICCIONES DE ACCESO)
-  // =========================================================================
   describe('B. Pruebas Negativas (Credenciales Inválidas y Bloqueo RBAC)', () => {
 
     it('CP-06: Rechaza contraseña incorrecta para un usuario válido', async () => {
-      const res = await iniciarSesion('medico@undav.edu.ar', 'clave_incorrecta');
+      const res = await iniciarSesion('sofia.martinez@undav.edu.ar', 'clave_incorrecta');
       assert.equal(res.ok, false);
       assert.match(res.mensaje, /Credenciales inválidas/i);
       assert.equal(obtenerSesionActiva(), null);

@@ -21,12 +21,12 @@ export const TODOS_LOS_MODULOS = [
 ];
 
 const BACKUP_USUARIOS = [
-  { id: 1, nombre: "Laura Gómez", email: "admision@undav.edu.ar", password: "1234", rol: "Admisión", pantallas_permitidas: ["Registro de Guardia", "Búsqueda por DNI/Afiliado"] },
-  { id: 2, nombre: "Carlos Méndez", email: "triage@undav.edu.ar", password: "1234", rol: "Triage", pantallas_permitidas: ["Registro de Parámetros Fisiológicos", "Clasificación Triage"] },
+  { id: 1, nombre: "Laura Gómez", email: "laura.gomez@undav.edu.ar", password: "1234", rol: "Admisión", pantallas_permitidas: ["Registro de Guardia", "Búsqueda por DNI/Afiliado"] },
+  { id: 2, nombre: "Carlos Méndez", email: "carlos.mendez@undav.edu.ar", password: "1234", rol: "Triage", pantallas_permitidas: ["Registro de Parámetros Fisiológicos", "Clasificación Triage"] },
   {
     id: 3,
     nombre: "Dra. Sofía Martínez",
-    email: "medico@undav.edu.ar",
+    email: "sofia.martinez@undav.edu.ar",
     password: "1234",
     rol: "Médico",
     matricula: "MP-45821",
@@ -38,10 +38,10 @@ const BACKUP_USUARIOS = [
     },
     pantallas_permitidas: ["Atención de Guardia", "Historia Clínica", "Recetas Electrónicas"]
   },
-  { id: 4, nombre: "Dr. Roberto Silva", email: "jefe@undav.edu.ar", password: "1234", rol: "Jefe de Guardia", pantallas_permitidas: ["Tablero de Control en Tiempo Real", "Autorización de Derivaciones"] },
-  { id: 5, nombre: "Mariana Torres", email: "admin.consultorios@undav.edu.ar", password: "1234", rol: "Administrativo", pantallas_permitidas: ["Validación de Órdenes Médicas", "Gestión de Agenda"] },
-  { id: 6, nombre: "Juan Pizzorno", email: "ti@undav.edu.ar", password: "1234", rol: "TI", pantallas_permitidas: ["Alta de Profesionales", "Parametrización Obras Sociales", "Reglas CIE-10"] },
-  { id: 7, nombre: "Dr. Lucas Pereyra", email: "consultorios.medico@undav.edu.ar", password: "1234", rol: "Médico", matricula: "MP-51204", doble_contexto: false, contexto_activo: "Consultorios Externos", pantallas_permitidas: ["Agenda de Consultorios", "Historia Clínica", "Recetas Electrónicas", "Solicitud de Estudios"] }
+  { id: 4, nombre: "Dr. Roberto Silva", email: "roberto.silva@undav.edu.ar", password: "1234", rol: "Jefe de Guardia", pantallas_permitidas: ["Tablero de Control en Tiempo Real", "Autorización de Derivaciones"] },
+  { id: 5, nombre: "Mariana Torres", email: "mariana.torres@undav.edu.ar", password: "1234", rol: "Administrativo", pantallas_permitidas: ["Validación de Órdenes Médicas", "Gestión de Agenda"] },
+  { id: 6, nombre: "Juan Pizzorno", email: "juan.pizzorno@undav.edu.ar", password: "1234", rol: "TI", pantallas_permitidas: ["Alta de Profesionales", "Parametrización Obras Sociales", "Reglas CIE-10"] },
+  { id: 7, nombre: "Dr. Lucas Pereyra", email: "lucas.pereyra@undav.edu.ar", password: "1234", rol: "Médico", matricula: "MP-51204", doble_contexto: false, contexto_activo: "Consultorios Externos", pantallas_permitidas: ["Agenda de Consultorios", "Historia Clínica", "Recetas Electrónicas", "Solicitud de Estudios"] }
 ];
 
 async function cargarUsuarios() {
@@ -55,7 +55,6 @@ async function cargarUsuarios() {
   }
 }
 
-// 1. Valida credenciales y verifica si el médico requiere elegir ámbito operativo (SU-38 / SU-40)
 export async function iniciarSesion(email, password) {
   const emailLimpio = email.trim().toLowerCase();
   if (!emailLimpio || !password) {
@@ -71,14 +70,12 @@ export async function iniciarSesion(email, password) {
     return { ok: false, mensaje: 'Credenciales inválidas. Verificá tu correo institucional y contraseña.' };
   }
 
-  // Validación específica SU-40: todo perfil Médico debe estar vinculado a una matrícula profesional
   if (usuario.rol === 'Médico' && !usuario.matricula) {
     return { ok: false, mensaje: 'Error de configuración: el perfil médico no posee una matrícula vinculada.' };
   }
 
   const { password: _, ...datosSesion } = usuario;
 
-  // Si es médico con doble contexto y aún no eligió turno, marcamos selección pendiente
   if (datosSesion.rol === 'Médico' && datosSesion.doble_contexto) {
     datosSesion.contexto_activo = null;
   }
@@ -92,7 +89,6 @@ export async function iniciarSesion(email, password) {
   };
 }
 
-// 2. [SU-40 / SU-5] Vincula el ámbito operativo elegido (Guardia o Consultorios Externos) a la matrícula del médico
 export function seleccionarContextoMedico(contexto) {
   const sesion = obtenerSesionActiva();
   if (!sesion || sesion.rol !== 'Médico' || !sesion.matricula) {
@@ -113,19 +109,16 @@ export function seleccionarContextoMedico(contexto) {
   return { ok: true, usuario: sesion };
 }
 
-// 3. Verifica si el usuario actual tiene acceso a un módulo específico
 export function tieneAccesoModulo(usuario, nombreModulo) {
   if (!usuario || !Array.isArray(usuario.pantallas_permitidas)) return false;
   return usuario.pantallas_permitidas.includes(nombreModulo);
 }
 
-// 4. Recupera la sesión activa
 export function obtenerSesionActiva() {
   const raw = sessionStorage.getItem('sesion_undav');
   return raw ? JSON.parse(raw) : null;
 }
 
-// 5. Cierra la sesión
 export function cerrarSesion() {
   sessionStorage.removeItem('sesion_undav');
 }
