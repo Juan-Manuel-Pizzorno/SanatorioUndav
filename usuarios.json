@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laura Gómez",
+    "email": "admision@undav.edu.ar",
+    "password": "1234",
+    "rol": "Admisión",
+    "pantallas_permitidas": ["Registro de Guardia", "Búsqueda por DNI/Afiliado"]
+  },
+  {
+    "id": 2,
+    "nombre": "Carlos Méndez",
+    "email": "triage@undav.edu.ar",
+    "password": "1234",
+    "rol": "Triage",
+    "pantallas_permitidas": ["Registro de Parámetros Fisiológicos", "Clasificación Triage"]
+  },
+  {
+    "id": 3,
+    "nombre": "Dra. Sofía Martínez",
+    "email": "medico@undav.edu.ar",
+    "password": "1234",
+    "rol": "Médico",
+    "matricula": "MP-45821",
+    "doble_contexto": true,
+    "pantallas_permitidas": ["Atención de Guardia", "Historia Clínica", "Recetas Electrónicas"]
+  },
+  {
+    "id": 4,
+    "nombre": "Dr. Roberto Silva",
+    "email": "jefe@undav.edu.ar",
+    "password": "1234",
+    "rol": "Jefe de Guardia",
+    "pantallas_permitidas": ["Tablero de Control en Tiempo Real", "Autorización de Derivaciones"]
+  },
+  {
+    "id": 5,
+    "nombre": "Mariana Torres",
+    "email": "admin.consultorios@undav.edu.ar",
+    "password": "1234",
+    "rol": "Administrativo",
+    "pantallas_permitidas": ["Validación de Órdenes Médicas", "Gestión de Agenda"]
+  },
+  {
+    "id": 6,
+    "nombre": "Juan Pizzorno",
+    "email": "ti@undav.edu.ar",
+    "password": "1234",
+    "rol": "TI",
+    "pantallas_permitidas": ["Alta de Profesionales", "Parametrización Obras Sociales", "Reglas CIE-10"]
+  }
+]
