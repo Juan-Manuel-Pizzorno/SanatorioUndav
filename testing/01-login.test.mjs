@@ -1,5 +1,7 @@
 //Ejecutando en la terminal "node --test testing/*.test.mjs" el sistema realiza el testing para todos los casos
 
+// [SU-39] Testing: Pruebas positivas y negativas de inicio de sesión y RBAC (CP-00 a CP-10)
+
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -27,7 +29,7 @@ const {
   cerrarSesion
 } = await import('../back/auth.js');
 
-describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39)', () => {
+describe('1. Suite de Testing Funcional y Seguridad RBAC — Login (SU-39)', () => {
 
   beforeEach(() => {
     sessionStorage.clear();
@@ -35,13 +37,13 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
 
   describe('A. Pruebas Positivas (Flujos Válidos)', () => {
 
-    it('CP-01: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
+    it('CP-00: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
       const rolesEsperados = ['Admisión', 'Triage', 'Médico', 'Jefe de Guardia', 'Administrativo', 'TI'];
       const rolesUnicosEnJSON = [...new Set(usuariosJSON.map((u) => u.rol))];
       assert.deepEqual(rolesUnicosEnJSON, rolesEsperados);
     });
 
-    it('CP-02: Inicio de sesión exitoso para todos los perfiles operativos con clave válida', async () => {
+    it('CP-01: Inicio de sesión exitoso para todos los perfiles operativos con clave válida', async () => {
       for (const u of usuariosJSON) {
         const res = await iniciarSesion(u.email, '1234');
         assert.equal(res.ok, true, `Falló el login válido para ${u.rol}`);
@@ -50,14 +52,14 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
       }
     });
 
-    it('CP-03: Normalización de correo (mayúsculas y espacios laterales) permite ingresar', async () => {
+    it('CP-02: Normalización de correo (mayúsculas y espacios laterales) permite ingresar', async () => {
       const res = await iniciarSesion('   SOFIA.MARTINEZ@UNDAV.EDU.AR  ', '1234');
       assert.equal(res.ok, true);
       assert.equal(res.usuario.nombre, 'Dra. Sofía Martínez');
       assert.equal(res.usuario.matricula, 'MP-45821');
     });
 
-    it('CP-04: Persistencia y cierre de sesión limpian correctamente el estado', async () => {
+    it('CP-03: Persistencia y cierre de sesión limpian correctamente el estado', async () => {
       await iniciarSesion('laura.gomez@undav.edu.ar', '1234');
       assert.notEqual(obtenerSesionActiva(), null, 'La sesión debe quedar guardada tras login');
 
@@ -65,7 +67,7 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
       assert.equal(obtenerSesionActiva(), null, 'La sesión debe quedar nula tras logout');
     });
 
-    it('CP-05: Cada rol tiene acceso positivo a sus pantallas asignadas', async () => {
+    it('CP-04: Cada rol tiene acceso positivo a sus pantallas asignadas', async () => {
       const { usuario: triage } = await iniciarSesion('carlos.mendez@undav.edu.ar', '1234');
       assert.equal(tieneAccesoModulo(triage, 'Registro de Parámetros Fisiológicos'), true);
       assert.equal(tieneAccesoModulo(triage, 'Clasificación Triage'), true);
@@ -78,20 +80,20 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
 
   describe('B. Pruebas Negativas (Credenciales Inválidas y Bloqueo RBAC)', () => {
 
-    it('CP-06: Rechaza contraseña incorrecta para un usuario válido', async () => {
+    it('CP-05: Rechaza contraseña incorrecta para un usuario válido', async () => {
       const res = await iniciarSesion('sofia.martinez@undav.edu.ar', 'clave_incorrecta');
       assert.equal(res.ok, false);
       assert.match(res.mensaje, /Credenciales inválidas/i);
       assert.equal(obtenerSesionActiva(), null);
     });
 
-    it('CP-07: Rechaza correo institucional inexistente en el padrón', async () => {
+    it('CP-06: Rechaza correo institucional inexistente en el padrón', async () => {
       const res = await iniciarSesion('intruso@undav.edu.ar', '1234');
       assert.equal(res.ok, false);
       assert.match(res.mensaje, /Credenciales inválidas/i);
     });
 
-    it('CP-08: Rechaza intentos de login con campos vacíos o solo espacios', async () => {
+    it('CP-07: Rechaza intentos de login con campos vacíos o solo espacios', async () => {
       const resVacio = await iniciarSesion('', '');
       assert.equal(resVacio.ok, false);
       assert.match(resVacio.mensaje, /Completá correo y contraseña/i);
@@ -100,13 +102,13 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
       assert.equal(resEspacios.ok, false);
     });
 
-    it('CP-09: Rechaza inyección básica o formato inválido en credenciales', async () => {
+    it('CP-08: Rechaza inyección básica o formato inválido en credenciales', async () => {
       const resSQLi = await iniciarSesion("' OR '1'='1", "' OR '1'='1");
       assert.equal(resSQLi.ok, false);
       assert.equal(obtenerSesionActiva(), null);
     });
 
-    it('CP-10: Matriz RBAC — Bloquea estrictamente el acceso a pantallas de otros roles', async () => {
+    it('CP-09: Matriz RBAC — Bloquea estrictamente el acceso a pantallas de otros roles', async () => {
       for (const u of usuariosJSON) {
         const { usuario } = await iniciarSesion(u.email, '1234');
         const modulosProhibidos = TODOS_LOS_MODULOS.filter(
@@ -125,7 +127,7 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
       }
     });
 
-    it('CP-11: Usuario no autenticado (null) no tiene acceso a ningún módulo', () => {
+    it('CP-10: Usuario no autenticado (null) no tiene acceso a ningún módulo', () => {
       for (const modulo of TODOS_LOS_MODULOS) {
         assert.equal(tieneAccesoModulo(null, modulo), false);
       }
