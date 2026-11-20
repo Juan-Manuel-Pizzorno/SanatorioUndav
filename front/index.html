@@ -1,4 +1,4 @@
-<!-- [SU-36] Front: Interfaz de inicio de sesión y visualización de módulos por rol -->
+<!-- [SU-36 / SU-5] Front: Login, Selector de Contexto Médico y Dashboard RBAC -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,7 +43,7 @@
       padding: 1.5rem;
     }
 
-    /* ================= VISTA LOGIN (SPLIT SCREEN) ================= */
+    /* ================= VISTA 1: LOGIN (SPLIT SCREEN) ================= */
     .login-wrapper {
       display: grid;
       grid-template-columns: 1fr 1.1fr;
@@ -289,11 +289,96 @@
       color: var(--primary-dark);
     }
 
-    /* ================= VISTA PANEL POST-LOGIN ================= */
+    /* ================= VISTA 2: SELECTOR DE CONTEXTO MÉDICO (SU-5) ================= */
+    .context-wrapper {
+      display: none;
+      width: 100%;
+      max-width: 680px;
+      background: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+      border: 1px solid var(--border);
+    }
+
+    .context-header {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%);
+      color: #ffffff;
+      padding: 1.75rem 2rem;
+    }
+
+    .context-header h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.3rem;
+    }
+
+    .context-header p {
+      margin: 0;
+      font-size: 0.88rem;
+      opacity: 0.9;
+    }
+
+    .context-body {
+      padding: 2rem;
+    }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .context-card {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.25rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .context-card:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -10px rgba(3, 105, 161, 0.35);
+    }
+
+    .context-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .context-card h4 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+
+    .context-card p {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    /* ================= VISTA 3: PANEL POST-LOGIN ================= */
     .dashboard-wrapper {
       display: none;
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       background: var(--surface);
       border-radius: 16px;
       overflow: hidden;
@@ -339,6 +424,41 @@
       border-radius: 999px;
       font-size: 0.74rem;
       font-weight: 600;
+    }
+
+    .context-badge {
+      display: none;
+      background: rgba(45, 212, 191, 0.18);
+      color: #5eead4;
+      border: 1px solid rgba(45, 212, 191, 0.38);
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn-switch {
+      display: none;
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-switch:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
     }
 
     .btn-logout {
@@ -420,7 +540,7 @@
     .denied .mod-status { color: #94a3b8; }
 
     @media (max-width: 760px) {
-      .login-wrapper {
+      .login-wrapper, .context-grid {
         grid-template-columns: 1fr;
       }
       .brand-panel {
@@ -500,7 +620,8 @@
         <div class="chips">
           <button type="button" class="chip" data-email="admision@undav.edu.ar">Admisión</button>
           <button type="button" class="chip" data-email="triage@undav.edu.ar">Triage</button>
-          <button type="button" class="chip" data-email="medico@undav.edu.ar">Médico</button>
+          <button type="button" class="chip" data-email="medico@undav.edu.ar">Médico (Doble Ámbito)</button>
+          <button type="button" class="chip" data-email="consultorios.medico@undav.edu.ar">Médico (Solo Consultorio)</button>
           <button type="button" class="chip" data-email="jefe@undav.edu.ar">Jefe Guardia</button>
           <button type="button" class="chip" data-email="admin.consultorios@undav.edu.ar">Administrativo</button>
           <button type="button" class="chip" data-email="ti@undav.edu.ar">Área TI</button>
@@ -509,24 +630,60 @@
     </div>
   </div>
 
-  <!-- ================= VISTA 2: ENTORNO SEGÚN ROL (SU-4) ================= -->
+  <!-- ================= VISTA 2: SELECTOR DE CONTEXTO MÉDICO (SU-5) ================= -->
+  <div class="context-wrapper" id="vista-contexto">
+    <div class="context-header">
+      <h2 id="ctx-saludo">Seleccioná tu ámbito operativo</h2>
+      <p id="ctx-subtitulo">Tu matrícula profesional está habilitada para operar en dos áreas. Elegí el turno actual:</p>
+    </div>
+
+    <div class="context-body">
+      <div class="context-grid">
+        <button type="button" class="context-card" data-contexto="Guardia">
+          <div class="context-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h4>Guardia Médica</h4>
+          <p>Atención por prioridad de Triage, evolución clínica de urgencia, recetas y solicitud de derivaciones.</p>
+        </button>
+
+        <button type="button" class="context-card" data-contexto="Consultorios Externos">
+          <div class="context-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h4>Consultorios Externos</h4>
+          <p>Gestión de agenda programada, resumen de historia clínica, recetas electrónicas y órdenes de estudios.</p>
+        </button>
+      </div>
+
+      <button type="button" class="btn-logout" id="btn-cancelar-ctx" style="background:#f1f5f9; color:#334155; border-color:#cbd5e1;">
+        ← Volver al inicio de sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= VISTA 3: ENTORNO SEGÚN ROL Y CONTEXTO (SU-4 / SU-5) ================= -->
   <div class="dashboard-wrapper" id="vista-panel">
     <div class="topbar">
       <div class="user-meta">
         <div class="avatar" id="avatar-iniciales">JP</div>
         <div>
           <div style="font-weight: 600; font-size: 1rem;" id="bienvenida"></div>
-          <div style="margin-top: 0.2rem; display: flex; gap: 0.5rem; align-items: center;">
+          <div style="margin-top: 0.25rem; display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center;">
             <span class="role-badge" id="rol-usuario"></span>
+            <span class="context-badge" id="contexto-usuario"></span>
             <span style="font-size: 0.78rem; color: #94a3b8;" id="matricula-usuario"></span>
           </div>
         </div>
       </div>
-      <button class="btn-logout" id="btn-salir">Cerrar sesión</button>
+      <div class="topbar-actions">
+        <button type="button" class="btn-switch" id="btn-cambiar-contexto">Cambiar ámbito</button>
+        <button type="button" class="btn-logout" id="btn-salir">Cerrar sesión</button>
+      </div>
     </div>
 
     <div class="dash-body">
-      <div class="dash-notice">
+      <div class="dash-notice" id="aviso-panel">
         <strong>Control de acceso basado en roles (RBAC):</strong> Se habilitaron únicamente los módulos autorizados para tu perfil operativo. Las funcionalidades de otros roles permanecen bloqueadas.
       </div>
 
@@ -534,11 +691,12 @@
     </div>
   </div>
 
-  <!-- ================= CONEXIÓN CON BACKEND (back/auth.js - SU-38) ================= -->
+  <!-- ================= CONEXIÓN CON BACKEND (back/auth.js) ================= -->
   <script type="module">
     import {
       TODOS_LOS_MODULOS,
       iniciarSesion,
+      seleccionarContextoMedico,
       tieneAccesoModulo,
       obtenerSesionActiva,
       cerrarSesion
@@ -547,7 +705,11 @@
     window.addEventListener('DOMContentLoaded', () => {
       const sesionGuardada = obtenerSesionActiva();
       if (sesionGuardada) {
-        mostrarPanelRol(sesionGuardada);
+        if (sesionGuardada.rol === 'Médico' && sesionGuardada.doble_contexto && !sesionGuardada.contexto_activo) {
+          mostrarSelectorContexto(sesionGuardada);
+        } else {
+          mostrarPanelRol(sesionGuardada);
+        }
       }
     });
 
@@ -579,11 +741,44 @@
       }
 
       errorBox.style.display = 'none';
-      mostrarPanelRol(resultado.usuario);
+
+      if (resultado.requiereSeleccionContexto) {
+        mostrarSelectorContexto(resultado.usuario);
+      } else {
+        mostrarPanelRol(resultado.usuario);
+      }
+    });
+
+    function mostrarSelectorContexto(usuario) {
+      document.getElementById('vista-login').style.display = 'none';
+      document.getElementById('vista-panel').style.display = 'none';
+      document.getElementById('vista-contexto').style.display = 'block';
+
+      document.getElementById('ctx-saludo').textContent = `Hola, ${usuario.nombre}`;
+      document.getElementById('ctx-subtitulo').textContent =
+        `Matrícula ${usuario.matricula} vinculada a doble ámbito. Seleccioná en qué área vas a operar en este turno:`;
+    }
+
+    document.querySelectorAll('.context-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const ambito = card.dataset.contexto;
+        const res = seleccionarContextoMedico(ambito);
+        if (res.ok) {
+          mostrarPanelRol(res.usuario);
+        }
+      });
+    });
+
+    document.getElementById('btn-cambiar-contexto').addEventListener('click', () => {
+      const sesion = obtenerSesionActiva();
+      if (sesion && sesion.doble_contexto) {
+        mostrarSelectorContexto(sesion);
+      }
     });
 
     function mostrarPanelRol(usuario) {
       document.getElementById('vista-login').style.display = 'none';
+      document.getElementById('vista-contexto').style.display = 'none';
       document.getElementById('vista-panel').style.display = 'block';
 
       const iniciales = usuario.nombre.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
@@ -591,6 +786,21 @@
       document.getElementById('bienvenida').textContent = usuario.nombre;
       document.getElementById('rol-usuario').textContent = `Perfil: ${usuario.rol}`;
       document.getElementById('matricula-usuario').textContent = usuario.matricula ? `Matrícula: ${usuario.matricula}` : '';
+
+      const ctxBadge = document.getElementById('contexto-usuario');
+      const btnSwitch = document.getElementById('btn-cambiar-contexto');
+      const aviso = document.getElementById('aviso-panel');
+
+      if (usuario.rol === 'Médico' && usuario.contexto_activo) {
+        ctxBadge.textContent = `Ámbito: ${usuario.contexto_activo}`;
+        ctxBadge.style.display = 'inline-block';
+        btnSwitch.style.display = usuario.doble_contexto ? 'inline-block' : 'none';
+        aviso.innerHTML = `<strong>Entorno Médico (${usuario.contexto_activo}):</strong> Se adaptaron las herramientas habilitadas para la matrícula <strong>${usuario.matricula}</strong> según el ámbito seleccionado.`;
+      } else {
+        ctxBadge.style.display = 'none';
+        btnSwitch.style.display = 'none';
+        aviso.innerHTML = `<strong>Control de acceso basado en roles (RBAC):</strong> Se habilitaron únicamente los módulos autorizados para tu perfil operativo. Las funcionalidades de otros roles permanecen bloqueadas.`;
+      }
 
       const grid = document.getElementById('lista-modulos');
       grid.innerHTML = '';
@@ -609,13 +819,17 @@
       });
     }
 
-    document.getElementById('btn-salir').addEventListener('click', () => {
+    function volverAlLogin() {
       cerrarSesion();
       document.getElementById('form-login').reset();
       document.getElementById('password').type = 'password';
       document.getElementById('vista-panel').style.display = 'none';
+      document.getElementById('vista-contexto').style.display = 'none';
       document.getElementById('vista-login').style.display = 'grid';
-    });
+    }
+
+    document.getElementById('btn-salir').addEventListener('click', volverAlLogin);
+    document.getElementById('btn-cancelar-ctx').addEventListener('click', volverAlLogin);
   </script>
 </body>
 </html>
