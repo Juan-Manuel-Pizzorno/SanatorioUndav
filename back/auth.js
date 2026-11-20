@@ -1,4 +1,4 @@
-// back/auth.js - Lógica de autenticación y control de acceso por roles (SU-38)
+// [SU-38] Back: Validación de credenciales y control de acceso basado en roles (RBAC)
 
 export const TODOS_LOS_MODULOS = [
   "Registro de Guardia",
