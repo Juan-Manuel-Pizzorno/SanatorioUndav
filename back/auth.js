@@ -1,4 +1,4 @@
-// [SU-38 / SU-40] Back: Validación de credenciales, RBAC y vínculo médico por matrícula/contexto
+// [SU-38 / SU-40 / SU-42] Back: Validación de credenciales, RBAC, matrícula médica y adaptación de permisos por contexto
 
 export const TODOS_LOS_MODULOS = [
   "Registro de Guardia",
