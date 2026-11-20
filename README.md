@@ -5,8 +5,8 @@
 
   [![Demo en Vivo](https://img.shields.io/badge/🚀_Demo_en_Vivo-GitHub_Pages-0ea5e9?style=for-the-badge)](https://juan-manuel-pizzorno.github.io/SanatorioUndav/)
   [![Metodología](https://img.shields.io/badge/Metodología-Scrum_%7C_Jira-0284c7?style=for-the-badge)](https://github.com/Juan-Manuel-Pizzorno/SanatorioUndav)
-  [![Estado](https://img.shields.io/badge/Sprint_1-En_Desarrollo-10b981?style=for-the-badge)](https://github.com/Juan-Manuel-Pizzorno/SanatorioUndav)
-  [![QA Suite](https://img.shields.io/badge/Tests_QA-11%2F11_Passing-22c55e?style=for-the-badge)](./testing/PLAN_DE_PRUEBAS_SU39.md)
+  [![Estado Sprint 1](https://img.shields.io/badge/Sprint_1-SU--4_%26_SU--5_Completados-10b981?style=for-the-badge)](https://github.com/Juan-Manuel-Pizzorno/SanatorioUndav)
+  [![QA Suite](https://img.shields.io/badge/QA_Suite-20%2F20_Passing-22c55e?style=for-the-badge)](./testing/PLAN_DE_PRUEBAS_SU43.md)
 
   ![Arquitectura Web](https://img.shields.io/badge/Arquitectura-Web_%2B_Contingencia_Offline-0f172a?style=flat-square)
   ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
@@ -14,7 +14,7 @@
   ![JavaScript ES6+](https://img.shields.io/badge/JavaScript_ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
   ![Node.js](https://img.shields.io/badge/Node.js_Test-339933?style=flat-square&logo=nodedotjs&logoColor=white)
 
-  [🌐 Abrir Aplicación en Vivo](https://juan-manuel-pizzorno.github.io/SanatorioUndav/) · [📋 Plan de Pruebas QA](./testing/PLAN_DE_PRUEBAS_SU39.md) · [🔐 Módulo de Autenticación](./back/auth.js)
+  [🌐 Abrir Aplicación en Vivo](https://juan-manuel-pizzorno.github.io/SanatorioUndav/) · [📋 Plan de Pruebas Login](./testing/PLAN_DE_PRUEBAS_SU39.md) · [📋 Plan de Pruebas Contexto](./testing/PLAN_DE_PRUEBAS_SU43.md) · [🔐 Módulo Auth & RBAC](./back/auth.js)
 
 </div>
 
@@ -28,7 +28,7 @@ El **Sistema Integral de Gestión Hospitalaria del Sanatorio UNDAV** es una solu
 1. **🚑 Guardia Médica:** Admisión administrativa, clasificación Triage de 5 niveles con ordenamiento por gravedad y tiempo acumulado, alertas de reevaluación, atención inmediata en Shock Room (Código Rojo), tablero de control en tiempo real, autorización de derivaciones con firma digital y llamados en monitores públicos.
 2. **🩺 Consultorios Externos:** Autogestión de turnos, motor de recomendación inteligente basado en profesionales frecuentes y diagnósticos **CIE-10**, recordatorios automáticos (WhatsApp / e-mail), gestión de sobreturnos en agendas separadas y reasignación automática a suplentes ante ausencias médicas.
 3. **🧑‍🤝‍🧑 Portal Web del Paciente:** Autenticación local o social (Gmail / Facebook), reserva y cancelación de turnos, carga de órdenes médicas para estudios y consulta centralizada de historial clínico, recetas electrónicas y resultados en PDF.
-4. **⚙️ Administración y Plataforma:** Identidad única para médicos con selector de contexto (*Guardia* / *Consultorios Externos*), parametrización de obras sociales y reglas CIE-10 por TI, y **esquema de contingencia offline** con autoguardado local y sincronización automática.
+4. **⚙️ Administración y Plataforma:** Identidad única para médicos vinculada a su matrícula profesional con selector de contexto (*Guardia* / *Consultorios Externos*), parametrización de obras sociales y reglas CIE-10 por TI, y **esquema de contingencia offline** con autoguardado local y sincronización automática.
 
 > **Exclusiones expresas del alcance:** La validación formal de matrículas y títulos profesionales (responsabilidad de RRHH), la creación de salas físicas separadas para pediatría y la gestión/firma física de declaraciones juradas por retiro voluntario quedan fuera del sistema.
 
@@ -44,7 +44,7 @@ El sistema adapta dinámicamente sus vistas y permisos según el rol operativo d
 | **Admisión de Guardia** | Registra ingresos por DNI/Afiliado, valida cobertura/plan, asienta motivo de consulta y deriva a Triage. |
 | **Enfermería / Triage** | Registra parámetros fisiológicos (**TA, FC, FR, Temp, SatO₂**), asigna nivel de Triage y ejecuta reevaluaciones. |
 | **Médico de Guardia** | Atiende según prioridad de Triage y espera acumulada, evoluciona historia clínica, solicita estudios, receta y gestiona altas o derivaciones. |
-| **Médico de Consultorios** | Atiende agenda programada, consulta resumen clínico, registra evoluciones y emite recetas electrónicas *(comparte usuario único con selector de contexto si actúa en ambas áreas)*. |
+| **Médico de Consultorios** | Atiende agenda programada, consulta resumen clínico, registra evoluciones y emite recetas electrónicas *(usuario único vinculado a matrícula con selector de contexto si actúa en ambas áreas)*. |
 | **Jefe de Guardia** | Monitorea ocupación en tiempo real (consultorios, Shock Room, camas de observación), controla alertas de espera y autoriza derivaciones externas con **firma digital**. |
 | **Administrativo de Consultorios** | Valida administrativamente las órdenes médicas adjuntadas por los pacientes para habilitar turnos de estudios. |
 | **Personal / Área de TI** | Da de alta profesionales, gestiona cuentas y roles, parametriza obras sociales/planes y configura reglas de recomendación **CIE-10**. |
@@ -102,20 +102,21 @@ El módulo de Guardia implementa estrictamente el estándar internacional de **T
 
 ---
 
-## 🔐 Credenciales de Prueba del Entorno (`Sprint 1`)
+## 🔐 Credenciales Nominales de Prueba (`Sprint 1`: `SU-4` y `SU-5`)
 
-Para probar el control de acceso basado en roles directamente en la aplicación desplegada:
+Para probar el control de acceso basado en roles y el selector de contexto médico directamente en la aplicación desplegada:
 
 > **Contraseña universal de prueba:** `1234` *(o utilizar los botones de autocompletado rápido en pantalla)*
 
-| Rol Operativo | Usuario de Prueba | Correo Institucional | Módulos Habilitados en el Prototipo |
+| Rol Operativo | Profesional de Prueba | Correo Institucional | Matrícula / Ámbito |
 | :--- | :--- | :--- | :--- |
-| 🟦 **Admisión** | Laura Gómez | `admision@undav.edu.ar` | `Registro de Guardia`, `Búsqueda por DNI/Afiliado` |
-| 🟩 **Triage** | Carlos Méndez | `triage@undav.edu.ar` | `Registro de Parámetros Fisiológicos`, `Clasificación Triage` |
-| 🩺 **Médico** | Dra. Sofía Martínez *(MP-45821)* | `medico@undav.edu.ar` | `Atención de Guardia`, `Historia Clínica`, `Recetas Electrónicas` |
-| 🟨 **Jefe de Guardia** | Dr. Roberto Silva | `jefe@undav.edu.ar` | `Tablero de Control en Tiempo Real`, `Autorización de Derivaciones` |
-| 🟪 **Administrativo** | Mariana Torres | `admin.consultorios@undav.edu.ar` | `Validación de Órdenes Médicas`, `Gestión de Agenda` |
-| ⚙️ **Área TI** | Juan Pizzorno | `ti@undav.edu.ar` | `Alta de Profesionales`, `Parametrización Obras Sociales`, `Reglas CIE-10` |
+| 🟦 **Admisión** | Laura Gómez | `laura.gomez@undav.edu.ar` | Recepción Guardia |
+| 🟩 **Triage** | Carlos Méndez | `carlos.mendez@undav.edu.ar` | Box de Triage |
+| 🩺 **Médico (Doble Ámbito)** | Dra. Sofía Martínez | `sofia.martinez@undav.edu.ar` | `MP-45821` · *Guardia / Consultorios Externos* |
+| 🩺 **Médico (Ámbito Único)** | Dr. Lucas Pereyra | `lucas.pereyra@undav.edu.ar` | `MP-51204` · *Solo Consultorios Externos* |
+| 🟨 **Jefe de Guardia** | Dr. Roberto Silva | `roberto.silva@undav.edu.ar` | Supervisión y Derivaciones |
+| 🟪 **Administrativo** | Mariana Torres | `mariana.torres@undav.edu.ar` | Consultorios Externos |
+| ⚙️ **Área TI** | Juan Pizzorno | `juan.pizzorno@undav.edu.ar` | Administración del Sistema |
 
 ---
 
@@ -123,12 +124,17 @@ Para probar el control de acceso basado en roles directamente en la aplicación 
 
 ```text
 SanatorioUndav/
+├── .github/workflows/
+│   └── qa.yml                        # Pipeline CI en GitHub Actions (ejecuta CP-00 a CP-19)
 ├── index.html                        # Punto de entrada y redirección para GitHub Pages
+├── package.json                      # Configuración modular ES6 y script npm test
 ├── front/
-│   └── index.html                    # Interfaz clínica (Login Split-Screen + Dashboard RBAC)
+│   └── index.html                    # [SU-36 / SU-41] Login Split-Screen, Selector de Contexto y Panel RBAC
 ├── back/
-│   ├── usuarios.json                 # Padrón de perfiles operativos y permisos
-│   └── auth.js                       # Lógica de autenticación, sesión y control de acceso
+│   ├── usuarios.json                 # [SU-37 / SU-40] Padrón nominal con matrículas y permisos por contexto
+│   └── auth.js                       # [SU-38 / SU-40 / SU-42] Autenticación, vínculo por matrícula y cambio de ámbito
 └── testing/
-    ├── login.test.mjs                # Suite automatizada en Node.js (11 casos positivos y negativos)
-    └── PLAN_DE_PRUEBAS_SU39.md       # Matriz de ejecución QA documentada
+    ├── 01-login.test.mjs             # [SU-39] Suite automatizada de Login y RBAC (CP-00 a CP-10)
+    ├── 02-contexto.test.mjs          # [SU-43] Suite automatizada de Matrícula y Contexto Médico (CP-11 a CP-19)
+    ├── PLAN_DE_PRUEBAS_SU39.md       # [SU-39] Matriz QA documentada — Historia SU-4
+    └── PLAN_DE_PRUEBAS_SU43.md       # [SU-43] Matriz QA documentada — Historia SU-5
