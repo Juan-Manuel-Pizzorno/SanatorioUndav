@@ -1,4 +1,4 @@
-//Ejecutando en la terminal "node --test testing/login.test.mjs" el sistema realiza el testing para usuarios válidos cómo inválidos
+//Ejecutando en la terminal "node --test testing/*.test.mjs" el sistema realiza el testing para todos los casos
 
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -40,10 +40,10 @@ describe('Suite de Testing Funcional y Seguridad RBAC — Sanatorio UNDAV (SU-39
   // =========================================================================
   describe('A. Pruebas Positivas (Flujos Válidos)', () => {
 
-    it('CP-01: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
+ it('CP-01: Estructura de datos contiene los 6 roles operativos definidos en el ERS', () => {
       const rolesEsperados = ['Admisión', 'Triage', 'Médico', 'Jefe de Guardia', 'Administrativo', 'TI'];
-      const rolesEnJSON = usuariosJSON.map((u) => u.rol);
-      assert.deepEqual(rolesEnJSON, rolesEsperados);
+      const rolesUnicosEnJSON = [...new Set(usuariosJSON.map((u) => u.rol))];
+      assert.deepEqual(rolesUnicosEnJSON, rolesEsperados);
     });
 
     it('CP-02: Inicio de sesión exitoso para todos los perfiles operativos con clave válida', async () => {
