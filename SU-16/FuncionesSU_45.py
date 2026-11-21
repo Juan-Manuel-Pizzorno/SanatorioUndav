@@ -1,3 +1,11 @@
+# Alias de compatibilidad hacia backPacientes.py [SU-45]
+from backPacientes import (
+    EDAD_MAXIMA_PEDIATRIA,
+    buscarPaciente,
+    esPacientePediatrico,
+    ingresarPaciente,
+    derivarPacienteATriage,
+)
 EDAD_MAXIMA_PEDIATRIA = 16
 #Recibe un número de DNI o de Afiliado y una lista.
 #Devuelve un paciente o None si no lo encuentra
