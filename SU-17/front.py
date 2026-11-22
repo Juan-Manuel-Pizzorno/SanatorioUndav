@@ -1,3 +1,4 @@
+from Validaciones_SU17 import pedir_entero, pedir_decimal
 def formulario_signos_vitales(paciente):
     print("\n--- Triage:", paciente["nombre"], paciente["apellido"], "(DNI:", paciente["dni_afiliado"] + ") ---")
 
