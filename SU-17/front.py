@@ -1,4 +1,4 @@
-from Validaciones_SU17 import pedir_entero, pedir_decimal
+from FuncionesDeValidacion.Validaciones import pedir_entero, pedir_decimal
 from backTriage import registrar_signos_vitales
 
 
