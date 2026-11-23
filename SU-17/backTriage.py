@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "SU-16")))
 
 from backPacientes import buscarPaciente, pacientes_admitidos, pacientes_en_triage
-from Validaciones_SU17 import numero_dentro_rangoCerrado
+from FuncionesDeValidacion.Validaciones import numero_dentro_rangoCerrado
 
 RANGOS_SIGNOS_VITALES = {
     "ta_sistolica": (40, 300),
