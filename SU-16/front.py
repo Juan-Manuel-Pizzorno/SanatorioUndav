@@ -1,4 +1,6 @@
 # Formulario de admisión de paciente en guardia
+from backPacientes import guardar_ingreso_y_derivar
+
 
 def pedir_texto(mensaje, solo_letras=False):
     """Pide un texto por consola, valida longitud mínima y opcionalmente que sean solo letras."""
@@ -32,7 +34,7 @@ def pedir_edad():
 
 
 def formulario_admision():
-    """Muestra el formulario de admisión por consola y devuelve los datos del paciente."""
+    """Muestra el formulario de admisión por consola, guarda el ingreso y deriva a Triage."""
     print("\n=== SANATORIO UNDAV - ADMISIÓN DE GUARDIA ===\n")
 
     paciente = {
@@ -49,9 +51,15 @@ def formulario_admision():
         print(f"  {clave}: {valor}")
     print("-----------------------------------\n")
 
-    return paciente
+    if guardar_ingreso_y_derivar(paciente):
+        print("Ingreso guardado y paciente derivado automáticamente a la cola de Triage.")
+        return paciente
+
+    print("Error: El paciente ya se encuentra admitido o los datos son inválidos.")
+    return None
 
 
 if __name__ == "__main__":
     datos_paciente = formulario_admision()
-    print("Formulario completado correctamente.")
+    if datos_paciente is not None:
+        print("Formulario completado correctamente.")
