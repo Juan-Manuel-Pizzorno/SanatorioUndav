@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "SU-16")))
 
 from backPacientes import ingresarPaciente, derivarPacienteATriage
-from Validaciones_SU17 import numero_dentro_rangoCerrado
+from Validaciones import numero_dentro_rangoCerrado
 from backTriage import (
     validar_signos_vitales,
     registrar_signos_vitales,
