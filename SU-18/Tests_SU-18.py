@@ -7,7 +7,7 @@ if RUTA_RAIZ not in sys.path:
 
 from backColaGuardia import clasificar_nivel_triage
 from backOrdenamientoCola import ingresar_a_cola_guardia, ordenar_cola_guardia
-from frontColaGuardia import mostrar_cola_espera
+from front import mostrar_cola_espera
 
 
 def _signos_normales():
