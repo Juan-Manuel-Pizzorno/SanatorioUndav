@@ -36,7 +36,7 @@ def formulario_signos_vitales(paciente):
     return signos
 
 
-if __name__ == "__main__":
+def flujo_triage():
     import sys
     import os
 
@@ -66,3 +66,7 @@ if __name__ == "__main__":
         print("Signos vitales vinculados correctamente al registro de admisión del paciente.")
     else:
         print("Error: No se pudieron vincular los signos vitales (verificá que TA diastólica < sistólica).")
+
+
+if __name__ == "__main__":
+    flujo_triage()
