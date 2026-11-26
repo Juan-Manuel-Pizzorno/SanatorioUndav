@@ -1,36 +1,11 @@
-# Formulario de admisión de paciente en guardia
-from backPacientes import guardar_ingreso_y_derivar
+# [SU-44] Formulario de admisión de paciente en guardia
+import os
+import sys
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "FuncionesDeValidacion")))
 
-def pedir_texto(mensaje, solo_letras=False):
-    """Pide un texto por consola, valida longitud mínima y opcionalmente que sean solo letras."""
-    while True:
-        valor = input(mensaje).strip()
-        if len(valor) < 2:
-            print("Error: Ingresá al menos 2 caracteres.")
-            continue
-        if solo_letras and not all(c.isalpha() or c.isspace() for c in valor):
-            print("Error: Este campo solo puede contener letras y espacios.")
-            continue
-        return valor
-
-
-def pedir_dni_afiliado():
-    """Pide DNI o N° de Afiliado y valida que sean solo números (7 a 12 dígitos)."""
-    while True:
-        valor = input("DNI / N° de Afiliado (solo números): ").strip()
-        if valor.isdigit() and 7 <= len(valor) <= 12:
-            return valor
-        print("Error: Ingresá solo números (entre 7 y 12 dígitos, sin puntos ni guiones).")
-
-
-def pedir_edad():
-    """Pide la edad y valida que sea un número entero entre 0 y 100."""
-    while True:
-        entrada = input("Edad: ").strip()
-        if entrada.isdigit() and 0 <= int(entrada) <= 100:
-            return int(entrada)
-        print("Error: Ingresá una edad válida (número entre 0 y 100).")
+from backPacientes import esPacientePediatrico, guardar_ingreso_y_derivar
+from Validaciones import pedir_cadena_numerica, pedir_entero, pedir_texto
 
 
 def formulario_admision():
@@ -38,17 +13,34 @@ def formulario_admision():
     print("\n=== SANATORIO UNDAV - ADMISIÓN DE GUARDIA ===\n")
 
     paciente = {
-        "dni_afiliado": pedir_dni_afiliado(),
-        "nombre_apellido": pedir_texto("Nombre y Apellido: ", solo_letras=True),
-        "edad": pedir_edad(),
-        "obra_social": pedir_texto("Obra Social: "),
-        "plan": pedir_texto("Plan: "),
-        "motivo_consulta": pedir_texto("Motivo de consulta: "),
+        "dni_afiliado": pedir_cadena_numerica(
+            "DNI / N° de Afiliado (solo números): ",
+            7,
+            12,
+            "Error: Ingresá solo números (entre 7 y 12 dígitos): ",
+        ),
+        "nombre_apellido": pedir_texto(
+            "Nombre y Apellido: ",
+            "Error: Ingresá al menos 2 caracteres (solo letras y espacios): ",
+            solo_letras=True,
+        ),
+        "edad": pedir_entero(
+            "Edad: ",
+            0,
+            100,
+            "Error: Ingresá una edad válida (0 a 100): ",
+        ),
+        "obra_social": pedir_texto("Obra Social: ", "Error: Ingresá al menos 2 caracteres: "),
+        "plan": pedir_texto("Plan: ", "Error: Ingresá al menos 2 caracteres: "),
+        "motivo_consulta": pedir_texto("Motivo de consulta: ", "Error: Ingresá al menos 2 caracteres: "),
     }
+
+    tipo_atencion = "Pediátrica (hasta 16 años)" if esPacientePediatrico(paciente) else "Adultos"
 
     print("\n--- Resumen de datos ingresados ---")
     for clave, valor in paciente.items():
         print(f"  {clave}: {valor}")
+    print(f"  tipo_atencion: {tipo_atencion}")
     print("-----------------------------------\n")
 
     if guardar_ingreso_y_derivar(paciente):
